@@ -1,0 +1,101 @@
+retailcrm_delivery_module_connect:
+    path:  /{_locale}/connect
+    defaults: { _controller: :Admin:connect }
+    requirements:
+        _locale: en|ru
+
+retailcrm_delivery_module_connect_edit:
+    path:  /{_locale}/connect/{clientId}/edit
+    defaults: { _controller: :Admin:connect }
+    requirements:
+        _locale: en|ru
+
+############
+# Admin
+############
+retailcrm_delivery_module_admin_list:
+    path:  /omega
+    defaults: { _controller: :Admin:list }
+
+retailcrm_delivery_module_admin_new:
+    path:  /omega/new
+    defaults: { _controller: :Admin:new }
+
+retailcrm_delivery_module_admin_edit:
+    path:  /omega/{connectionId}/edit
+    defaults: { _controller: :Admin:edit }
+    requirements:
+        connectionId: \d+
+
+retailcrm_delivery_module_admin_update_configuration:
+    path:  /omega/{connectionId}/update-configuration
+    defaults: { _controller: :Admin:updateConfiguration }
+    requirements:
+        connectionId: \d+
+
+retailcrm_delivery_module_admin_parcel_list:
+    path:  /omega/parcels
+    defaults: { _controller: :Admin:parcelList }
+
+retailcrm_delivery_module_admin_parcel_new:
+    path:  /omega/parcels/new
+    defaults: { _controller: :Admin:parcelNew }
+
+retailcrm_delivery_module_admin_parcel_edit:
+    path:  /omega/parcels/{parcelId}/edit
+    defaults: { _controller: :Admin:parcelEdit }
+    requirements:
+        parcelId: \d+
+
+
+#############
+# API
+############
+retailcrm_delivery_module_api_base:
+    path:  /api
+    defaults: { _controller: retailcrm.delivery_module.api_controller::index }
+
+retailcrm_delivery_module_api_activity:
+    path:  /api/activity
+    defaults: { _controller: retailcrm.delivery_module.api_controller::activity }
+    methods: POST
+
+retailcrm_delivery_module_api_calculate:
+    path:  /api/calculate
+    defaults: { _controller: retailcrm.delivery_module.api_controller::calculate }
+    methods: POST
+
+retailcrm_delivery_module_api_save:
+    path:  /api/save
+    defaults: { _controller: retailcrm.delivery_module.api_controller::save }
+    methods: POST
+
+retailcrm_delivery_module_api_get:
+    path:  /api/get
+    defaults: { _controller: retailcrm.delivery_module.api_controller::getDeliveryOrder }
+    methods: GET
+
+retailcrm_delivery_module_api_delete:
+    path:  /api/delete
+    defaults: { _controller: retailcrm.delivery_module.api_controller::delete }
+    methods: POST
+
+retailcrm_delivery_module_api_shipment_point_list:
+    path:  /api/shipment-point-list
+    defaults: { _controller: retailcrm.delivery_module.api_controller::shipmentPointList }
+    methods: GET
+
+retailcrm_delivery_module_api_print:
+    path:  /api/print
+    defaults: { _controller: retailcrm.delivery_module.api_controller::print }
+    methods: POST
+
+retailcrm_delivery_module_api_shipment_save:
+    path:  /api/shipment-save
+    defaults: { _controller: retailcrm.delivery_module.api_controller::shipmentSave }
+    methods: POST
+
+retailcrm_delivery_module_api_shipment_delete:
+    path:  /api/shipment-delete
+    defaults: { _controller: retailcrm.delivery_module.api_controller::shipmentDelete }
+    methods: POST

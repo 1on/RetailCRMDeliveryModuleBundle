@@ -1,0 +1,60 @@
+{% extends 'CoreOmegaBundle:Layout:base.html.twig' %}
+{% form_theme form 'DeliveryCoreBundle:Form:admin.html.twig' %}
+
+{% block content %}
+    <div class="header-main">
+        <h1 style="margin: 10px 0 10px 0;">
+            {% if connection is defined %}
+                {{ 'header.adminConnectionEdit'|trans({'%uid%': '<a target="_blank" href="'~connection.crmUrl~'">'~connection.crmUrl~'</a>'})|raw }}
+            {% else %}
+                {{ 'header.adminConnectionCreate'|trans()|raw }}
+            {% endif %}
+        </h1>
+    </div>
+
+    <div class="main">
+        <div class="m-box mn-or-info">
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+
+            <div class="field-for-group cleared">
+                {{ form_row(form.crmUrl) }}
+                {{ form_row(form.crmKey) }}
+
+                {{ form_row(form.isActive) }}
+
+                {% if form.language is defined %}
+                    {{ form_row(form.language) }}
+                {% endif %}
+
+                {{ form_row(form.isFreeze) }}
+            </div>
+
+            {% block form_appendix %}
+            {% endblock %}
+
+            <div class="field-for-group cleared">
+                {{ form_row(form.debug) }}
+            </div>
+
+            <div class="field-for-group cleared">
+                <div class="input-group cleared">
+                    <input type="submit" name="submit" value="{{ 'button.save'|trans()|raw }}" class="btn small btn-save"/>
+                </div>
+                {% if is_granted('ROLE_DEVELOPER') %}
+                {% if connection is defined %}
+                    <div class="input-group cleared">
+                        <a href="{{ path(route ~ '_admin_update_configuration', {'connectionId': connection.id}) }}" class="btn small btn-save">
+                            {{ 'button.updateConfiguration'|trans()|raw }}
+                        </a>
+                    </div>
+                {% endif %}
+                {% endif %}
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <div id="push"></div>
+    </div>
+{% endblock %}

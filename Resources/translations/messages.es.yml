@@ -1,0 +1,67 @@
+header:
+    configureConnection: Configuración de la conexión del sistema
+    additionalSettings: Configuración avanzada
+    adminParcelEdit: 'Editar seguimiento %trackId%'
+    adminParcelCreate: Crear seguimiento
+    listConnection: Conexiones actuales
+    listTracking: Seguimiento actual
+    serviceConnect: 'Conexión de Servicio %delivery%'
+    adminConnectionEdit: 'Editar datos del cliente: %uid%'
+    adminConnectionCreate: Nueva conexión
+
+button:
+    activate: Activar
+    save: Guardar
+    add: Añadir
+    listConnection: A la lista de conexiones
+    listTracking: Seguimiento de paquetes
+    addTracking: Añadir seguimiento
+    updateConfiguration: Actualizar configuración
+
+label:
+    crmUrl: Dirección del Sistema
+    crmKey: Clave API del sistema
+    debug: Modo de depuración
+    isActive: Conexión activa
+    isFreeze: Conexión congelada
+    language: Idioma
+    account_number: Número de cuenta
+    token: token API
+    isInProduction: Utilizar servidor normal
+    id: ID
+    connection: ID de conexión
+    orderId: ID de pedido
+    trackId: ID de seguimiento
+    isClosed: Seguimiento completado
+    connectionId: Id de conexión
+
+select_value:
+    sender: Remitente
+    receiver: Receptor
+
+error:
+    connect.failed: Datos para conectarse a %delivery% o la clave API del sistema son incorrectos, intente de nuevo.<br/><br/><a href="%href%">Introducir datos de nuevo</a>
+    unknown_country: País desconocido
+    unknown_shipping_country: Páis de envio desconocido
+    shipping_country_required: Debe especificar el país de envío
+    shipper_postal_code_required: Debe especificar el código Postal del remitente
+    delivery_postal_code_required: Debe especificar el código Postal del destinatario
+    manager_phone_required: Debe especificar el Teléfono del mánager
+    dhl:
+        ready_time_required: Debe especificar la fecha del envío
+        dury_payment_type_for_receiver: El remitente no puede pagar los cargos adicionales si el que paga es el destinatario
+        receiver_account_number_required: Debe especificar el número de cuenta del destinatario
+
+plate:
+    label: Etiqueta
+
+day_short:
+    monday: Lu
+    tuesday: Ma
+    wednesday: Mie
+    thursday: Ju
+    friday: Vi
+    saturday: Sa
+    sunday: Do
+
+pagination.items.name: elementos

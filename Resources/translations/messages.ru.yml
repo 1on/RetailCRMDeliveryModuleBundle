@@ -1,0 +1,67 @@
+header:
+    configureConnection: Настройка подключения к системе
+    additionalSettings: Дополнительные настройки
+    adminParcelEdit: 'Редактировать отслеживание %trackId%'
+    adminParcelCreate: Создать отслеживание
+    listConnection: Текущие подключения
+    listTracking: Текущие отслеживания
+    serviceConnect: 'Подключение сервиса %delivery%'
+    adminConnectionEdit: 'Редактировать данные клиента: %uid%'
+    adminConnectionCreate: Новое подключение
+
+button:
+    activate: Активировать
+    save: Сохранить
+    add: Добавить
+    listConnection: К списку подключений
+    listTracking: Отслеживание посылок
+    addTracking: Добавить отслеживание
+    updateConfiguration: Обновить конфигурацию
+
+label:
+    crmUrl: Адрес системы
+    crmKey: API ключ системы
+    debug: Режим отладки
+    isActive: Подключение активно
+    isFreeze: Подключение заморожено
+    language: Язык
+    account_number: Номер аккаунта
+    token: API токен
+    isInProduction: Использовать боевой сервер
+    id: ID
+    connection: ID подключения
+    orderId: ID заказа
+    trackId: ID отслеживания
+    isClosed: Отслеживание завершено
+    connectionId: Идентификатор подключения
+
+select_value:
+    sender: Отправитель
+    receiver: Получатель
+
+error:
+    connect.failed: Данные для подключения к %delivery% или API ключ системы введены неверно, попробуйте еще раз.<br/><br/><a href="%href%">Ввести данные заново</a>
+    unknown_country: Неизвестная страна
+    unknown_shipping_country: Неизвестная страна отправки
+    shipping_country_required: Необходимо указать страну отправки
+    shipper_postal_code_required: Необходимо указать почтовый индекс отправителя
+    delivery_postal_code_required: Необходимо указать почтовый индекс получателя
+    manager_phone_required: Необходимо указать телефон менеджера
+    dhl:
+        ready_time_required: Необходимо указать время отгрузки
+        dury_payment_type_for_receiver: Отправитель не может быть плательщиком за дополнительные сборы если тип плательщика получатель
+        receiver_account_number_required: Необходимо указать номер аккаунта получателя
+
+plate:
+    label: Наклейка
+
+day_short:
+    monday: Пн
+    tuesday: Вт
+    wednesday: Ср
+    thursday: Чт
+    friday: Пт
+    saturday: Сб
+    sunday: Вс
+
+pagination.items.name: элементов

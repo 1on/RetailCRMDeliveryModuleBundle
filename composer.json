@@ -1,0 +1,33 @@
+{
+  "name": "retailcrm/delivery-module-bundle",
+  "description": "Delivery module skeleton for RetailCrm",
+  "license": "MIT",
+  "type": "symfony-bundle",
+  "autoload": {
+    "psr-4": {
+      "RetailCrm\\DeliveryModuleBundle\\": ""
+    }
+  },
+  "require": {
+    "php": "^7.3",
+    "ramsey/uuid": "^3.9",
+    "ramsey/uuid-doctrine": "^1.5",
+    "symfony/framework-bundle": "^3.4|^4.0|^5.0",
+    "jms/serializer": "^3.4",
+    "jms/serializer-bundle": "^3.5",
+    "doctrine/orm": "^2.7",
+    "symfony/lock": "^5.0",
+    "retailcrm/api-client-php": "dev-add-logger@dev",
+    "symfony/translation": "^5.0",
+    "symfony/routing": "^5.0"
+  },
+  "repositories": [
+      {
+          "type": "vcs",
+          "url": "https://github.com/raulleo/api-client-php.git"
+      }
+  ],
+  "require-dev": {
+    "doctrine/doctrine-fixtures-bundle": "^3.3"
+  }
+}

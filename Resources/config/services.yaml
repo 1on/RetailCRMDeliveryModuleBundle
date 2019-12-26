@@ -1,0 +1,58 @@
+parameters:
+    retailcrm.delivery_module.api_controller: RetailCrm\DeliveryModuleBundle\Controller\ApiController
+
+services:
+    _defaults:
+        public: false
+        autowire: true
+        autoconfigure: true
+
+    retailcrm.delivery_module.api_controller:
+        public: true
+        class: '%retailcrm.delivery_module.api_controller%'
+
+    RetailCrm\DeliveryModuleBundle\Service\RetailCrmClientFactoryInterface:
+        class: RetailCrm\DeliveryModuleBundle\Service\RetailCrmClientFactory
+
+    RetailCrm\DeliveryModuleBundle\Service\ModuleManagerInterface:
+        public: true
+        class: '%retailcrm.delivery_module.module_manager.class%'
+        arguments:
+            - '%retailcrm.delivery_module.configuration%'
+            - '@RetailCrm\DeliveryModuleBundle\Service\RetailCrmClientFactoryInterface'
+            - '@RetailCrm\DeliveryModuleBundle\Service\DeliveryOrderManager'
+            - '@jms_serializer'
+            - '@translator'
+            - '@router'
+
+    RetailCrm\DeliveryModuleBundle\Service\AccountManager:
+        class: 'RetailCrm\DeliveryModuleBundle\Service\AccountManager'
+        arguments:
+            - '%retailcrm.delivery_module.account.class%'
+            - '@doctrine.orm.entity_manager'
+
+    RetailCrm\DeliveryModuleBundle\Service\DeliveryOrderManager:
+        class: 'RetailCrm\DeliveryModuleBundle\Service\DeliveryOrderManager'
+        arguments:
+            - '%retailcrm.delivery_module.delivery_order.class%'
+            - '@doctrine.orm.entity_manager'
+
+    RetailCrm\DeliveryModuleBundle\Command\StatusesCommand:
+        class: RetailCrm\DeliveryModuleBundle\Command\StatusesCommand
+        tags: ['console.command']
+
+    RetailCrm\DeliveryModuleBundle\Command\UpdateModuleCommand:
+        class: RetailCrm\DeliveryModuleBundle\Command\UpdateModuleCommand
+        tags: ['console.command']
+
+    RetailCrm\DeliveryModuleBundle\Controller\:
+        resource: '../../Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    RetailCrm\DeliveryModuleBundle\EventSubscriber\SerializeListener:
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
+    RetailCrm\DeliveryModuleBundle\EventSubscriber\ClientIdSubscriber:
+        class: RetailCrm\DeliveryModuleBundle\EventSubscriber\ClientIdSubscriber
