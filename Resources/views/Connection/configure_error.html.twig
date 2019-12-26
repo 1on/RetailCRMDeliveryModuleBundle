@@ -1,0 +1,13 @@
+{% extends 'CoreAutomateBundle:Layout:connect.html.twig' %}
+
+{% block title %}
+    {{ 'header.serviceConnect'|trans({'%delivery%': title_delivery})|raw }}
+{% endblock %}
+
+{% block logo %}
+    <img style="height: 60px" src="{{ src_logo_delivery }}" alt="{{ title_delivery }}">
+{% endblock %}
+
+{% block form %}
+    {{ 'error.connect.failed'|trans({'%delivery%': title_delivery, '%href%': referer})|raw }}
+{% endblock %}

@@ -1,0 +1,46 @@
+version: '2.1'
+services:
+  automate_app:
+    image: "gwinn/php:7.1"
+    ports:
+      - "80:8080"
+    working_dir: /automate
+    user: ${UID:-1000}:${GID:-1000}
+    volumes:
+      - ./:/automate
+    depends_on:
+      - automate_db
+      - automate_db_test
+      - automate_cache
+      - automate_queue
+    links:
+      - "automate_db:automate_db"
+      - "automate_db_test:automate_db_test"
+      - "automate_cache:automate_cache"
+      - "automate_queue:automate_queue"
+    command: make run
+  automate_db:
+    image: "postgres:9.5"
+    ports:
+      - ${POSTGRES_ADDRESS:-127.0.0.1:5432}:5432
+    environment:
+      - POSTGRES_PASSWORD=automate
+      - POSTGRES_USER=automate
+      - POSTGRES_DB=automate
+  automate_db_test:
+    image: "postgres:9.5"
+    ports:
+      - ${POSTGRES_ADDRESS:-127.0.0.1:5434}:5434
+    environment:
+      - PGPORT=5434
+      - POSTGRES_PASSWORD=automate
+      - POSTGRES_USER=automate
+      - POSTGRES_DB=automate
+  automate_cache:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  automate_queue:
+    image: "schickling/beanstalkd:latest"
+    ports:
+      - "11300:11300"

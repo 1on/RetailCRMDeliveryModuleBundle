@@ -1,0 +1,40 @@
+
+services:
+    RetailCrm\DeliveryModuleBundle\Service\ModuleManager:
+        public: true
+        class: "%retailcrm.delivery_module.module_manager.class%"
+        arguments:
+            - "%retailcrm.delivery_module.module_configuration%"
+            - "@RetailCrm\DeliveryModuleBundle\Service\DeliveryOrderManager"
+            - "@jms_serializer"
+            - "@translator"
+            - "@router"
+
+    RetailCrm\DeliveryModuleBundle\Service\DeliveryOrderManager:
+        class: "RetailCrm\DeliveryModuleBundle\Service\DeliveryOrderManager"
+        arguments:
+            - "%retailcrm.delivery_module.delivery_order.class%"
+            - "@doctrine.orm.entity_manager"
+
+    RetailCrm\DeliveryModuleBundle\Command\StatusesCommand:
+        class: RetailCrm\DeliveryModuleBundle\Command\StatusesCommand
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "RetailCrm\DeliveryModuleBundle\Service\ModuleManager"
+        tags: ['console.command']
+
+    RetailCrm\DeliveryModuleBundle\Command\UpdateModuleConfigurationCommand:
+        class: RetailCrm\DeliveryModuleBundle\Command\UpdateModuleConfigurationCommand
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "RetailCrm\DeliveryModuleBundle\Service\ModuleManager"
+        tags: ['console.command']
+
+    RetailCrm\DeliveryModuleBundle\Controller\:
+        resource: '../../Controller'
+        public: true
+        tags: ['controller.service_arguments']
+
+    RetailCrm\DeliveryModuleBundle\EventListener\SerializeListener:
+        tags:
+            - { name: jms_serializer.event_subscriber }

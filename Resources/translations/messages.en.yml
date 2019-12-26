@@ -1,0 +1,67 @@
+header:
+    configureConnection: Configuration of connection with system
+    additionalSettings: Additional settings
+    adminParcelEdit: 'Edit tracking %trackId%'
+    adminParcelCreate: Create tracking
+    listConnection: Current connection
+    listTracking: Current tracking
+    serviceConnect: 'Service connection %delivery%'
+    adminConnectionEdit: 'Edit connection data: %uid%'
+    adminConnectionCreate: New connection
+
+button:
+    activate: Activate
+    save: Save
+    add: Add
+    listConnection: List of connections
+    listTracking: Parcel tracking
+    addTracking: Add tracking
+    updateConfiguration: Update the configuration
+
+label:
+    crmUrl: System address
+    crmKey: System API key
+    debug: Debug mode
+    isActive: Integration is active
+    isFreeze: Integration is freeze
+    language: Language
+    account_number: Account number
+    token: API token
+    isInProduction: Use production server
+    id: ID
+    connection: ID connection
+    orderId: ID order
+    trackId: ID tracking
+    isClosed: Tracking completed
+    connectionId: Connection ID
+
+select_value:
+    sender: Sender
+    receiver: Receiver
+
+error:
+    connect.failed: Data to connect to %delivery% or System API key is entered incorrectly, try again.<br/><br/><a href="%href%">Re-enter data</a>
+    unknown_country: Unknown country
+    unknown_shipping_country: Unknown shipping country
+    shipping_country_required: Shipping country must not be empty
+    shipper_postal_code_required: Shipper postal code required
+    delivery_postal_code_required: Delivery postal code required
+    manager_phone_required: Manager`s phone required
+    dhl:
+        ready_time_required: Ready time required
+        dury_payment_type_for_receiver: Duty Payment Type cant be sender for payer type receiver
+        receiver_account_number_required: Receiver account number required
+
+plate:
+    label: Label
+
+day_short:
+    monday: Mon
+    tuesday: Tue
+    wednesday: Wed
+    thursday: Thu
+    friday: Fri
+    saturday: Sat
+    sunday: Sun
+
+pagination.items.name: elements

@@ -1,0 +1,80 @@
+retailcrm_delivery_module_connect:
+    path:  /{_locale}/connect
+    defaults: { _controller: :Admin:connect }
+    requirements:
+        _locale: en|ru
+
+retailcrm_delivery_module_connect_edit:
+    path:  /{_locale}/connect/{clientId}/edit
+    defaults: { _controller: :Admin:connect }
+    requirements:
+        _locale: en|ru
+
+############
+# Admin
+############
+retailcrm_delivery_module_admin_list:
+    path:  /omega
+    defaults: { _controller: :Admin:list }
+
+retailcrm_delivery_module_admin_new:
+    path:  /omega/new
+    defaults: { _controller: :Admin:new }
+
+retailcrm_delivery_module_admin_edit:
+    path:  /omega/{connectionId}/edit
+    defaults: { _controller: :Admin:edit }
+    requirements:
+        connectionId: \d+
+
+retailcrm_delivery_module_admin_update_configuration:
+    path:  /omega/{connectionId}/update-configuration
+    defaults: { _controller: :Admin:updateConfiguration }
+    requirements:
+        connectionId: \d+
+
+retailcrm_delivery_module_admin_parcel_list:
+    path:  /omega/parcels
+    defaults: { _controller: :Admin:parcelList }
+
+retailcrm_delivery_module_admin_parcel_new:
+    path:  /omega/parcels/new
+    defaults: { _controller: :Admin:parcelNew }
+
+retailcrm_delivery_module_admin_parcel_edit:
+    path:  /omega/parcels/{parcelId}/edit
+    defaults: { _controller: :Admin:parcelEdit }
+    requirements:
+        parcelId: \d+
+
+
+#############
+# Exchange
+############
+retailcrm_delivery_module_exchange_base:
+    path:  /api
+    defaults: { _controller: DeliveryModuleBundle/Controller/Api:index }
+
+retailcrm_delivery_module_exchange_activity:
+    path:  /api/activity
+    defaults: { _controller: DeliveryModuleBundle/Controller/Api:activity }
+
+retailcrm_delivery_module_exchange_calculate:
+    path:  /api/calculate
+    defaults: { _controller: DeliveryModuleBundle/Controller/Api:calculate }
+
+retailcrm_delivery_module_exchange_save:
+    path:  /api/save
+    defaults: { _controller: DeliveryModuleBundle/Controller/Api:save }
+
+retailcrm_delivery_module_exchange_print:
+    path:  /api/print
+    defaults: { _controller: DeliveryModuleBundle/Controller/Api:print }
+
+retailcrm_delivery_module_exchange_shipment_save:
+    path:  /api/shipment-save
+    defaults: { _controller: DeliveryModuleBundle/Controller/Api:shipmentSave }
+
+retailcrm_delivery_module_exchange_shipment_delete:
+    path:  /api/shipment-delete
+    defaults: { _controller: DeliveryModuleBundle/Controller/Api:shipmentDelete }
