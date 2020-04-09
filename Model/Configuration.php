@@ -182,4 +182,15 @@ class Configuration
      * @Serializer\Type("array<RetailCrm\DeliveryModuleBundle\Model\DeliveryDataField>")
      */
     public $shipmentDataFieldList;
+
+    /**
+     * Массив настроек модуля
+     *
+     * @var Settings
+     *
+     * @Serializer\Groups({"set", "get"})
+     * @Serializer\SerializedName("settings")
+     * @Serializer\Type("RetailCrm\DeliveryModuleBundle\Model\Settings")
+     */
+    public $settings;
 }

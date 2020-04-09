@@ -127,7 +127,7 @@ abstract class ModuleManager implements ModuleManagerInterface
             $this->translator->setLocale($this->account->getLanguage());
         }
 
-        $this->retailCrmClient = $this->retailCrmClientFactory->createRetailCrmClient($this->account, $this->logger);
+        $this->retailCrmClient = $this->retailCrmClientFactory->createRetailCrmClient($this->account);
 
         return $this;
     }
@@ -140,7 +140,11 @@ abstract class ModuleManager implements ModuleManagerInterface
 
         $integrationModule = $this->buildIntegrationModule();
         $integrationModule = $this->jmsSerializer
-            ->serialize($integrationModule, 'json', SerializationContext::create()->setGroups(['get', 'request']));
+            ->serialize(
+                $integrationModule,
+                'json',
+                SerializationContext::create()->setGroups(['get', 'request'])->setSerializeNull(true)
+            );
 
         $client = $this->retailCrmClient;
         $response = $this->pinbaService->timerHandler(
@@ -158,6 +162,11 @@ abstract class ModuleManager implements ModuleManagerInterface
         if ($response['success'] ?? false) {
             return true;
         } else {
+            if ($this->logger) {
+                $errorMsg = $response['error_msg'] ?? '';
+                $this->logger->warning("Failed to update module configuration[account={$this->getAccount()->getCrmUrl()}]:{$errorMsg}");
+            }
+
             return false;
         }
     }
@@ -171,7 +180,7 @@ abstract class ModuleManager implements ModuleManagerInterface
         $integrationModule->active = $this->account->isActive();
         $integrationModule->name = $this->moduleParameters['locales'][$this->translator->getLocale()]['name'];
         $integrationModule->logo = $this->moduleParameters['locales'][$this->translator->getLocale()]['logo'];
-        $integrationModule->clientId = $this->account->getId();
+        $integrationModule->clientId = $this->account->getClientId();
         $integrationModule->availableCountries = $this->moduleParameters['countries'];
         $integrationModule->actions = [
             'activity' => 'activity',
@@ -182,11 +191,7 @@ abstract class ModuleManager implements ModuleManagerInterface
             [],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $integrationModule->accountUrl = $this->router->generate(
-            'retailcrm_delivery_module_connect',
-            ['_locale' => $this->account->getLanguage()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        $integrationModule->accountUrl = $this->getAccountUrl();
 
         $integrationModule->integrations = ['delivery' => $this->doBuildConfiguration()];
 
@@ -194,6 +199,8 @@ abstract class ModuleManager implements ModuleManagerInterface
     }
 
     abstract protected function doBuildConfiguration(): Configuration;
+
+    abstract protected function getAccountUrl(): string;
 
     public function calculateDelivery(RequestCalculate $data): array
     {
@@ -349,30 +356,6 @@ abstract class ModuleManager implements ModuleManagerInterface
                     );
                 }
             );
-        }
-    }
-
-    private function createRetailCrmClient(): void
-    {
-        if (null === $this->account) {
-            throw new \LogicException('Account is not selected');
-        }
-
-        if (empty($this->account->getCrmUrl())) {
-            throw new \LogicException('Crm url is empty');
-        }
-
-        if (empty($this->account->getCrmApiKey())) {
-            throw new \LogicException('Crm apiKey is empty');
-        }
-
-        $this->retailCrmClient = new ApiClient(
-            $this->account->getCrmUrl(),
-            $this->account->getCrmApiKey(),
-            ApiClient::V5
-        );
-        if ($this->logger) {
-            $this->retailCrmClient->setLogger($this->logger);
         }
     }
 }
