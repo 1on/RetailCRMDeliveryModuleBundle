@@ -66,12 +66,6 @@ class ClientIdSubscriber implements EventSubscriberInterface
         if (null === $account) {
             throw new AccessDeniedHttpException('ClientId not found');
         }
-        if (!$account->isActive()) {
-            throw new AccessDeniedHttpException('Account is not active');
-        }
-        if ($account->isFreeze()) {
-            throw new AccessDeniedHttpException('Account is freezed');
-        }
 
         $this->moduleManager->setAccount($account);
     }
