@@ -17,6 +17,10 @@ class Configuration
     const ACTION_SHIPMENT_SAVE = 'shipmentSave';
     const ACTION_SHIPMENT_DELETE = 'shipmentDelete';
     const ACTION_SHIPMENT_POINT_LIST = 'shipmentPointList';
+    const ACTION_TARIFF_LIST = 'tariffList';
+
+    const TARIFF_COURIER = 'courier';
+    const TARIFF_SELF_DELIVERY = 'selfDelivery';
 
     /**
      * Описание подключения.
