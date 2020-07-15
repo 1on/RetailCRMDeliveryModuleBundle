@@ -1,0 +1,11 @@
+integration_module_access:
+    server_unreachable_exception: 'Не удалось подключиться к интеграционному серверу'
+    module_access_exception: 'Не верный логин или пароль'
+
+retailcrm_access:
+    access_denied: 'Доступ к методу "%method%" запрещен'
+    curl_exception: 'Не удалось подключиться к API'
+    service_unavailable: 'Сервис временно недоступен'
+    invalid_json: 'API вернуло ответ в неподдерживаемом формате'
+    requires_https: 'Адрес API должен начинаться с https'
+    wrong_api_key: 'Неверный API-ключ'
