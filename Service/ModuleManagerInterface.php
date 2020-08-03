@@ -12,8 +12,10 @@ use RetailCrm\DeliveryModuleBundle\Model\RequestSave;
 use RetailCrm\DeliveryModuleBundle\Model\RequestShipmentDelete;
 use RetailCrm\DeliveryModuleBundle\Model\RequestShipmentPointList;
 use RetailCrm\DeliveryModuleBundle\Model\RequestShipmentSave;
+use RetailCrm\DeliveryModuleBundle\Model\ResponseLoadDeliveryData;
 use RetailCrm\DeliveryModuleBundle\Model\ResponseSave;
 use RetailCrm\DeliveryModuleBundle\Model\ResponseShipmentSave;
+use RetailCrm\DeliveryModuleBundle\Model\Terminal;
 
 interface ModuleManagerInterface
 {
@@ -31,12 +33,14 @@ interface ModuleManagerInterface
 
     public function saveDelivery(RequestSave $data, DeliveryOrder $delivery = null): ResponseSave;
 
+    public function getDelivery(string $externalId): ResponseLoadDeliveryData;
+
     public function deleteDelivery(RequestDelete $request, DeliveryOrder $delivery): bool;
 
     /**
-     * @return \RetailCrm\DeliveryModuleBundle\Model\Terminal[]
+     * @return Terminal[]
      */
-    public function shipmentPointList(RequestShipmentPointList $request): array;
+    public function getShipmentPointList(RequestShipmentPointList $request): array;
 
     public function saveShipment(RequestShipmentSave $data): ResponseShipmentSave;
 

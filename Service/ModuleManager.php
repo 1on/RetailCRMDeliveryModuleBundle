@@ -2,7 +2,6 @@
 
 namespace RetailCrm\DeliveryModuleBundle\Service;
 
-use GuzzleHttp\Handler\MockHandler;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
@@ -19,19 +18,16 @@ use RetailCrm\DeliveryModuleBundle\Model\RequestSave;
 use RetailCrm\DeliveryModuleBundle\Model\RequestShipmentDelete;
 use RetailCrm\DeliveryModuleBundle\Model\RequestShipmentPointList;
 use RetailCrm\DeliveryModuleBundle\Model\RequestShipmentSave;
+use RetailCrm\DeliveryModuleBundle\Model\RequestStatusUpdateItem;
 use RetailCrm\DeliveryModuleBundle\Model\ResponseLoadDeliveryData;
 use RetailCrm\DeliveryModuleBundle\Model\ResponseSave;
 use RetailCrm\DeliveryModuleBundle\Model\ResponseShipmentSave;
+use RetailCrm\DeliveryModuleBundle\Model\Terminal;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class ModuleManager implements ModuleManagerInterface
 {
-    /**
-     * @var string
-     */
-    protected $integrationCode;
-
     /**
      * @var array
      */
@@ -46,11 +42,6 @@ abstract class ModuleManager implements ModuleManagerInterface
      * @var Account
      */
     protected $account;
-
-    /**
-     * @var MockHandler
-     */
-    protected $mockHandler;
 
     /**
      * @var TranslatorInterface
@@ -95,7 +86,6 @@ abstract class ModuleManager implements ModuleManagerInterface
         TranslatorInterface $translator,
         UrlGeneratorInterface $router
     ) {
-        $this->integrationCode = $moduleParameters['integration_code'];
         $this->moduleParameters = $moduleParameters;
         $this->retailCrmClientFactory = $retailCrmClientFactory;
         $this->deliveryManager = $deliveryManager;
@@ -105,13 +95,18 @@ abstract class ModuleManager implements ModuleManagerInterface
         $this->pinbaService = new PinbaService();
     }
 
+    public function getIntegrationCode(): string
+    {
+        return $this->moduleParameters['integration_code'];
+    }
+
     public function getAccountCode(): string
     {
         if (null === $this->account) {
             throw new \LogicException('Account is not selected');
         }
 
-        return sprintf('%s-%s', $this->integrationCode, $this->account->getId());
+        return sprintf('%s-%s', $this->getIntegrationCode(), $this->account->getId());
     }
 
     public function getAccount(): ?Account
@@ -138,10 +133,9 @@ abstract class ModuleManager implements ModuleManagerInterface
             throw new \LogicException('Account is not selected');
         }
 
-        $integrationModule = $this->buildIntegrationModule();
         $integrationModule = $this->jmsSerializer
             ->serialize(
-                $integrationModule,
+                $this->buildIntegrationModule(),
                 'json',
                 SerializationContext::create()->setGroups(['get', 'request'])->setSerializeNull(true)
             );
@@ -176,7 +170,7 @@ abstract class ModuleManager implements ModuleManagerInterface
         $integrationModule = new IntegrationModule();
 
         $integrationModule->code = $this->getAccountCode();
-        $integrationModule->integrationCode = $this->integrationCode;
+        $integrationModule->integrationCode = $this->getIntegrationCode();
         $integrationModule->active = $this->account->isActive();
         $integrationModule->name = $this->moduleParameters['locales'][$this->translator->getLocale()]['name'];
         $integrationModule->logo = $this->moduleParameters['locales'][$this->translator->getLocale()]['logo'];
@@ -223,9 +217,9 @@ abstract class ModuleManager implements ModuleManagerInterface
     }
 
     /**
-     * @return \RetailCrm\DeliveryModuleBundle\Model\Terminal[]
+     * @return Terminal[]
      */
-    public function shipmentPointList(RequestShipmentPointList $request): array
+    public function getShipmentPointList(RequestShipmentPointList $request): array
     {
         throw new \LogicException('Method should be implemented');
     }
@@ -314,9 +308,9 @@ abstract class ModuleManager implements ModuleManagerInterface
     /**
      * Получение актуальных статусов доставки от службы доставки.
      *
-     * @param \RetailCrm\DeliveryModuleBundle\Entity\Parcel[] $deliveries
+     * @param array $deliveries
      *
-     * @return \RetailCrm\DeliveryModuleBundle\Model\RequestStatusUpdateItem[]
+     * @return RequestStatusUpdateItem[]
      */
     protected function doUpdateStatuses(array $deliveries): array
     {
@@ -326,7 +320,7 @@ abstract class ModuleManager implements ModuleManagerInterface
     /**
      * Обновление статусов в CRM.
      *
-     * @param \RetailCrm\DeliveryModuleBundle\Model\RequestStatusUpdateItem[] $deliveriesHistory
+     * @param RequestStatusUpdateItem[] $deliveriesHistory
      *
      * @throws \Exception
      */
@@ -344,7 +338,7 @@ abstract class ModuleManager implements ModuleManagerInterface
 
             $client = $this->retailCrmClient;
             $moduleCode = $this->getAccountCode();
-            $response = $this->pinbaService->timerHandler(
+            $this->pinbaService->timerHandler(
                 [
                     'api' => 'retailCrm',
                     'method' => 'deliveryTracking',

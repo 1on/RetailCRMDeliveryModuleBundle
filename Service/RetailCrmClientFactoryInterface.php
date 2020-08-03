@@ -2,9 +2,9 @@
 
 namespace RetailCrm\DeliveryModuleBundle\Service;
 
-use App\Entity\Account;
 use Psr\Log\LoggerInterface;
 use RetailCrm\ApiClient;
+use RetailCrm\DeliveryModuleBundle\Model\Entity\Account;
 
 interface RetailCrmClientFactoryInterface
 {

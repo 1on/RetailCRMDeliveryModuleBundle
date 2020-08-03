@@ -12,7 +12,7 @@ class PinbaService
      */
     public function timerHandler(array $tags, \Closure $handler)
     {
-        if (function_exists('pinba_timer_start')) {
+        if (function_exists('pinba_timer_start') && function_exists('pinba_timer_stop')) {
             $timer = pinba_timer_start($tags);
             $response = $handler();
             pinba_timer_stop($timer);
