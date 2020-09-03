@@ -85,7 +85,7 @@ abstract class ModuleManager implements ModuleManagerInterface
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     public function __construct(
         array $moduleParameters,
