@@ -163,8 +163,9 @@ abstract class ModuleManager implements ModuleManagerInterface
             return true;
         } else {
             if ($this->logger) {
-                $errorMsg = $response['error_msg'] ?? '';
-                $this->logger->warning("Failed to update module configuration[account={$this->getAccount()->getCrmUrl()}]:{$errorMsg}");
+                $errorMsg = $response['errorMsg'] ?? '';
+                $errors = json_encode($response['errors'] ?? '');
+                $this->logger->warning("Failed to update module configuration[account={$this->getAccount()->getCrmUrl()}]: {$errorMsg}. Detailed errors: {$errors}");
             }
 
             return false;
