@@ -1,6 +1,6 @@
 <?php
 
-namespace RetailCrm\DeliveryModuleBundle\Model;
+namespace RetailCrm\DeliveryModuleBundle\Model\Response;
 
 use JMS\Serializer\Annotation as Serializer;
 
