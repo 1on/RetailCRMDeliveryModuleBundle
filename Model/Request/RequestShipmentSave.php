@@ -1,12 +1,13 @@
 <?php
 
-namespace RetailCrm\DeliveryModuleBundle\Model;
+namespace RetailCrm\DeliveryModuleBundle\Model\Request;
 
 use JMS\Serializer\Annotation as Serializer;
+use RetailCrm\DeliveryModuleBundle\Model\Traits\ExtraDataTrait;
 
 class RequestShipmentSave
 {
-    use Traits\ExtraDataTrait;
+    use ExtraDataTrait;
 
     /**
      * Идентификатор отгрузки в службе доставки. Передается если требуется отредактировать уже оформленную отгрузку

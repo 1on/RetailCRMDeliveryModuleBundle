@@ -1,13 +1,14 @@
 <?php
 
-namespace RetailCrm\DeliveryModuleBundle\Model;
+namespace RetailCrm\DeliveryModuleBundle\Model\Request;
 
-use Intaro\CRMBundle\Entity\Model\DeliveryTime;
+use RetailCrm\DeliveryModuleBundle\Model\DeliveryTime;
 use JMS\Serializer\Annotation as Serializer;
+use RetailCrm\DeliveryModuleBundle\Model\Traits\ExtraDataTrait;
 
 class RequestCalculate
 {
-    use Traits\ExtraDataTrait;
+    use ExtraDataTrait;
 
     /**
      * Адрес отгрузки.
@@ -34,7 +35,7 @@ class RequestCalculate
     /**
      * Набор упаковок.
      *
-     * @var Intaro\CRMDeliveryBundle\Form\Model\Package[]
+     * @var RetailCrm\DeliveryModuleBundle\Model\Package[]
      *
      * @Serializer\Groups({"request", "calculate"})
      * @Serializer\SerializedName("packages")

@@ -1,8 +1,9 @@
 <?php
 
-namespace RetailCrm\DeliveryModuleBundle\Model;
+namespace RetailCrm\DeliveryModuleBundle\Model\Request;
 
 use JMS\Serializer\Annotation as Serializer;
+use RetailCrm\DeliveryModuleBundle\Model\StatusInfo;
 
 class RequestStatusUpdateItem
 {
