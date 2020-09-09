@@ -79,7 +79,7 @@ class Customer
      *
      * @Serializer\Groups({"get"})
      * @Serializer\SerializedName("contragent")
-     * @Serializer\Type("RetailCrm\DeliveryModuleBundle\Model\Model\Contragent")
+     * @Serializer\Type("RetailCrm\DeliveryModuleBundle\Model\Contragent")
      */
     public $contragent;
 
