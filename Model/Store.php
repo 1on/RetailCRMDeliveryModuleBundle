@@ -23,4 +23,13 @@ class Store
      * @Serializer\Type("string")
      */
     public $name;
+
+    /**
+     * @var StoreWorkTime
+     *
+     * @Serializer\Groups({"request"})
+     * @Serializer\SerializedName("workTime")
+     * @Serializer\Type("RetailCrm\DeliveryModuleBundle\Model\StoreWorkTime")
+     */
+    public $workTime;
 }
