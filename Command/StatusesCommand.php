@@ -2,7 +2,7 @@
 
 namespace RetailCrm\DeliveryModuleBundle\Command;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use RetailCrm\DeliveryModuleBundle\Command\Traits\AccountAwareTrait;
 use RetailCrm\DeliveryModuleBundle\Exception\AbstractModuleException;
 use RetailCrm\DeliveryModuleBundle\Service\AccountManager;
 use RetailCrm\DeliveryModuleBundle\Service\ModuleManagerInterface;
@@ -15,6 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class StatusesCommand extends Command
 {
     use LockableTrait;
+    use AccountAwareTrait;
 
     /**
      * @var ModuleManagerInterface
@@ -60,23 +61,10 @@ class StatusesCommand extends Command
             ? (int) $input->getArgument('accountId')
             : null;
 
-        $paginator = [];
-        if (null !== $accountId) {
-            $paginator = [$this->accountManager - find($accountId)];
-        } else {
-            $accountQuery = $this->accountManager->getRepository()
-                ->createQueryBuilder('account')
-                ->where('account.active = true')
-                ->andWhere('account.freeze != true')
-                ->addOrderBy('account.id')
-                ->getQuery()
-               ->setFirstResult(0)
-               ->setMaxResults(100);
-            $paginator = new Paginator($accountQuery);
-        }
+        $accounts = $this->getAccounts($accountId);
 
         $count = 0;
-        foreach ($paginator as $account) {
+        foreach ($accounts as $account) {
             try {
                 $count += $this->moduleManager
                     ->setAccount($account)

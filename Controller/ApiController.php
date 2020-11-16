@@ -8,7 +8,6 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use RetailCrm\DeliveryModuleBundle\Exception;
 use RetailCrm\DeliveryModuleBundle\Model\AbstractResponseSuccessful;
-use RetailCrm\DeliveryModuleBundle\Model\Calculate;
 use RetailCrm\DeliveryModuleBundle\Model\Entity\DeliveryOrder;
 use RetailCrm\DeliveryModuleBundle\Model\IntegrationModule;
 use RetailCrm\DeliveryModuleBundle\Model\RequestCalculate;
@@ -31,7 +30,6 @@ use RetailCrm\DeliveryModuleBundle\Service\ModuleManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception as SymfonyException;
 
@@ -61,8 +59,7 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
         SerializerInterface $jmsSerializer,
         ModuleManagerInterface $moduleManager,
         AccountManager $accountManager,
-        DeliveryOrderManager $deliveryOrderManager,
-        RequestStack $requestStack
+        DeliveryOrderManager $deliveryOrderManager
     ) {
         $this->jmsSerializer = $jmsSerializer;
         $this->moduleManager = $moduleManager;
@@ -72,14 +69,14 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     public function activity(Request $request): JsonResponse
     {
-        if (!is_string($request->request->get('activity'))) {
+        $requestData = $request->request->get('activity');
+        if (!is_string($requestData)) {
             return $this->getInvalidResponse('Parameter "activity" must be json', 400);
         }
-        $activity = $request->request->get('activity');
 
         try {
             $requestModel = $this->jmsSerializer->deserialize(
-                $activity,
+                $requestData,
                 IntegrationModule::class,
                 'json',
                 DeserializationContext::create()->setGroups(['activity'])
@@ -90,9 +87,7 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
         $this->moduleManager->getAccount()->setActive($requestModel->active);
         $this->moduleManager->getAccount()->setFreeze($requestModel->freeze);
-
-        $systemUrl = $request->request->get('systemUrl');
-        $this->moduleManager->getAccount()->setCrmUrl($systemUrl);
+        $this->moduleManager->getAccount()->setCrmUrl($request->request->get('systemUrl'));
 
         $this->accountManager->flush();
 
@@ -101,10 +96,11 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     public function calculate(Request $request): JsonResponse
     {
-        if (!is_string($request->request->get('calculate'))) {
+        $requestData = $request->request->get('calculate');
+        if (!is_string($requestData)) {
             return $this->getInvalidResponse('Parameter "calculate" must be json', 400);
         }
-        $requestData = $request->request->get('calculate');
+
         try {
             $requestModel = $this->jmsSerializer->deserialize(
                 $requestData,
@@ -132,10 +128,11 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     public function save(Request $request): JsonResponse
     {
-        if (!is_string($request->request->get('save'))) {
+        $requestData = $request->request->get('save');
+        if (!is_string($requestData)) {
             return $this->getInvalidResponse('Parameter "save" must be json', 400);
         }
-        $requestData = $request->request->get('save');
+
         try {
             $requestModel = $this->jmsSerializer->deserialize(
                 $requestData,
@@ -222,10 +219,11 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     public function delete(Request $request): JsonResponse
     {
-        if (!is_string($request->request->get('delete'))) {
+        $requestData = $request->request->get('delete');
+        if (!is_string($requestData)) {
             return $this->getInvalidResponse('Parameter "delete" must be json', 400);
         }
-        $requestData = $request->request->get('delete');
+
         try {
             $requestModel = $this->jmsSerializer->deserialize(
                 $requestData,
@@ -290,10 +288,11 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     public function print(Request $request): Response
     {
-        if (!is_string($request->request->get('print'))) {
+        $requestData = $request->request->get('print');
+        if (!is_string($requestData)) {
             return $this->getInvalidResponse('Parameter "print" must be json', 400);
         }
-        $requestData = $request->request->get('print');
+
         try {
             $requestModel = $this->jmsSerializer->deserialize(
                 $requestData,
@@ -338,10 +337,11 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     public function shipmentSave(Request $request): JsonResponse
     {
-        if (!is_string($request->request->get('shipmentSave'))) {
+        $requestData = $request->request->get('shipmentSave');
+        if (!is_string($requestData)) {
             return $this->getInvalidResponse('Parameter "shipmentSave" must be json', 400);
         }
-        $requestData = $request->request->get('shipmentSave');
+
         try {
             $requestModel = $this->jmsSerializer->deserialize(
                 $requestData,
@@ -366,10 +366,11 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     public function shipmentDelete(Request $request): JsonResponse
     {
-        if (!is_string($request->request->get('shipmentDelete'))) {
+        $requestData = $request->request->get('shipmentDelete');
+        if (!is_string($requestData)) {
             return $this->getInvalidResponse('Parameter "shipmentDelete" must be json', 400);
         }
-        $requestData = $request->request->get('shipmentDelete');
+
         try {
             $requestModel = $this->jmsSerializer->deserialize(
                 $requestData,
@@ -442,7 +443,7 @@ class ApiController extends AbstractController implements ClientIdSecuredControl
 
     protected function doShipmentPointList(RequestShipmentPointList $requestModel): array
     {
-        return $this->moduleManager->shipmentPointList($requestModel);
+        return $this->moduleManager->getShipmentPointList($requestModel);
     }
 
     protected function doShipmentSave(RequestShipmentSave $requestModel): ResponseShipmentSave

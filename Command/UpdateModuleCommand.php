@@ -2,7 +2,7 @@
 
 namespace RetailCrm\DeliveryModuleBundle\Command;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use RetailCrm\DeliveryModuleBundle\Command\Traits\AccountAwareTrait;
 use RetailCrm\DeliveryModuleBundle\Service\AccountManager;
 use RetailCrm\DeliveryModuleBundle\Service\ModuleManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UpdateModuleCommand extends Command
 {
     use LockableTrait;
+    use AccountAwareTrait;
 
     /**
      * @var ModuleManagerInterface
@@ -55,27 +56,14 @@ class UpdateModuleCommand extends Command
             return 0;
         }
 
-        $accountId = $input->getArgument('accountId')
-            ? $input->getArgument('accountId')
+        $accountId = $input->hasArgument('accountId')
+            ? (int) $input->getArgument('accountId')
             : null;
 
-        $paginator = [];
-        if (null !== $accountId) {
-            $paginator = [$this->accountManager->find($accountId)];
-        } else {
-            $accountQuery = $this->accountManager->getRepository()
-                ->createQueryBuilder('account')
-                ->where('account.active = true')
-                ->andWhere('account.freeze != true')
-                ->addOrderBy('account.id')
-                ->getQuery()
-                ->setFirstResult(0)
-                ->setMaxResults(100);
-            $paginator = new Paginator($accountQuery);
-        }
+        $accounts = $this->getAccounts($accountId);
 
         $count = 0;
-        foreach ($paginator as $account) {
+        foreach ($accounts as $account) {
             try {
                 $this->moduleManager
                     ->setAccount($account)
