@@ -8,7 +8,15 @@ use RetailCrm\DeliveryModuleBundle\Model\Entity\DeliveryOrder;
 
 class DeliveryOrderManager
 {
+    /**
+     * @var string
+     */
     protected $class;
+
+    /**
+     * @var ObjectManager
+     */
+    protected $entityManager;
 
     public function __construct(string $deliveryOrderClass, ObjectManager $entityManager)
     {

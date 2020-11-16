@@ -52,4 +52,13 @@ class AccountManager
     {
         return $this->entityManager->getRepository($this->class);
     }
+
+    public function getActiveQueryBuilder()
+    {
+        return $this->getRepository()->createQueryBuilder('account')
+            ->where('account.isActive IS TRUE')
+            ->andWhere('account.isFreeze IS NOT TRUE')
+            ->orderBy('account.id')
+        ;
+    }
 }
