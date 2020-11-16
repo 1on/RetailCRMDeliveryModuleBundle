@@ -1,0 +1,11 @@
+integration_module_access:
+    server_unreachable_exception: 'Failed to connect to the integration server'
+    module_access_exception: 'Invalid login or password'
+
+retailcrm_access:
+    access_denied: 'Access to the method "%method%" is denied'
+    curl_exception: 'Failed to connect to API'
+    service_unavailable: 'Service is temporarily unavailable'
+    invalid_json: 'API returned a response in an unsupported format'
+    requires_https: 'API address must start with https'
+    wrong_api_key: 'Invalid API key'

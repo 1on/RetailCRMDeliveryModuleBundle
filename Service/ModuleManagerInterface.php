@@ -25,6 +25,8 @@ interface ModuleManagerInterface
 
     public function setAccount(Account $account): self;
 
+    public function checkAccess(): bool;
+
     public function updateModuleConfiguration(): bool;
 
     public function calculateDelivery(RequestCalculate $data): array;

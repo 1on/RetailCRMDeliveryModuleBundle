@@ -1,0 +1,11 @@
+integration_module_access:
+    server_unreachable_exception: 'No se ha podido conectar al servidor de integración'
+    module_access_exception: 'El Usuario o la contraseña no es correcta'
+
+retailcrm_access:
+    access_denied: 'Acceso al método "%method%" está prohibido'
+    curl_exception: 'No se ha podido conectar al API'
+    service_unavailable: 'Servicio no está disponible temporalmente'
+    invalid_json: 'API ha devuelto la respuesta en el formato no soportado'
+    requires_https: 'Dirección del API tiene que comenzar con https'
+    wrong_api_key: 'El API-key no es correcto'
