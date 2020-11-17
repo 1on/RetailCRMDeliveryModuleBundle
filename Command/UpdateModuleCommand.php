@@ -2,7 +2,7 @@
 
 namespace RetailCrm\DeliveryModuleBundle\Command;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ObjectManager;
 use RetailCrm\DeliveryModuleBundle\Service\AccountManager;
 use RetailCrm\DeliveryModuleBundle\Service\ModuleManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -15,6 +15,8 @@ class UpdateModuleCommand extends Command
 {
     use LockableTrait;
 
+    const QUERY_MAX_RESULTS = 100;
+
     /**
      * @var ModuleManagerInterface
      */
@@ -26,6 +28,11 @@ class UpdateModuleCommand extends Command
     private $accountManager;
 
     /**
+     * @var ObjectManager
+     */
+    private $entityManager;
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -33,13 +40,15 @@ class UpdateModuleCommand extends Command
         $this
             ->setName('module:update')
             ->setDescription('Update module')
-            ->addArgument('accountId', InputArgument::OPTIONAL, 'Choose account, or make it for all');
+            ->addArgument('accountId', InputArgument::OPTIONAL, 'Choose account, or make it for all')
+        ;
     }
 
-    public function __construct(ModuleManagerInterface $moduleManager, AccountManager $accountManager)
+    public function __construct(ModuleManagerInterface $moduleManager, AccountManager $accountManager, ObjectManager $entityManager)
     {
         $this->moduleManager = $moduleManager;
         $this->accountManager = $accountManager;
+        $this->entityManager = $entityManager;
 
         parent::__construct();
     }
@@ -59,41 +68,59 @@ class UpdateModuleCommand extends Command
             ? $input->getArgument('accountId')
             : null;
 
-        $paginator = [];
+        $accountQueryBuilder = $this->accountManager->getActiveQueryBuilder()
+            ->andWhere('account.id > :lastId')
+            ->setMaxResults(static::QUERY_MAX_RESULTS)
+        ;
+
         if (null !== $accountId) {
-            $paginator = [$this->accountManager->find($accountId)];
-        } else {
-            $accountQuery = $this->accountManager->getRepository()
-                ->createQueryBuilder('account')
-                ->where('account.active = true')
-                ->andWhere('account.freeze != true')
-                ->addOrderBy('account.id')
-                ->getQuery()
-                ->setFirstResult(0)
-                ->setMaxResults(100);
-            $paginator = new Paginator($accountQuery);
+            $accountQueryBuilder
+                ->andWhere('account.id = :accountId')
+                ->setParameter('accountId', $accountId)
+            ;
         }
 
+        $accountQuery = $accountQueryBuilder->getQuery();
+
+        $commandResult = 0;
         $count = 0;
-        foreach ($paginator as $account) {
-            try {
-                $this->moduleManager
-                    ->setAccount($account)
-                    ->updateModuleConfiguration()
-                ;
-                ++$count;
-            } catch (\Exception $e) {
-                $output->writeln(
-                    "<error>Failed to update configuration for account {$account->getCrmUrl()}[{$account->getId()}]</error>"
-                );
-                $output->writeln("<error>Error: {$e->getMessage()}</error>");
+
+        $lastId = 0;
+        while (true) {
+            $accountQuery->setParameter('lastId', $lastId);
+
+            $result = $accountQuery->getResult();
+            if (empty($result)) {
+                break;
             }
+
+            foreach ($result as $account) {
+                $lastId = $account->getId();
+
+                try {
+                    $this->moduleManager
+                        ->setAccount($account)
+                        ->updateModuleConfiguration()
+                    ;
+                    ++$count;
+                } catch (\Exception $e) {
+                    $output->writeln(
+                        "<error>Failed to update configuration for account {$account->getCrmUrl()}[{$account->getId()}]</error>"
+                    );
+                    $output->writeln("<error>Error: {$e->getMessage()}</error>");
+
+                    $commandResult = 1;
+                }
+            }
+
+            $this->entityManager->clear();
+            gc_collect_cycles();
         }
 
         $output->writeln("<info>{$count} modules updated.</info>");
 
         $this->release();
 
-        return 0;
+        return $commandResult;
     }
 }
