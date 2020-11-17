@@ -56,8 +56,8 @@ class AccountManager
     public function getActiveQueryBuilder()
     {
         return $this->getRepository()->createQueryBuilder('account')
-            ->where('account.isActive IS TRUE')
-            ->andWhere('account.isFreeze IS NOT TRUE')
+            ->where('account.active = true')
+            ->andWhere('account.freeze != true')
             ->orderBy('account.id')
         ;
     }
