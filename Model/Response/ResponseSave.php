@@ -1,12 +1,8 @@
 <?php
 
-namespace RetailCrm\DeliveryModuleBundle\Model;
+namespace RetailCrm\DeliveryModuleBundle\Model\Response;
 
-use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as Serializer;
-
-use Intaro\CRMDeliveryBundle\Delivery\Generic\Generic;
 
 class ResponseSave
 {
