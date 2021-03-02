@@ -1,9 +1,9 @@
 <?php
 
-namespace RetailCrm\DeliveryModuleBundle\Model;
+namespace RetailCrm\DeliveryModuleBundle\Model\Response;
 
-use Symfony\Component\Validator\Mapping\ClassMetadata;
-use Symfony\Component\Validator\Constraints as Assert;
+use RetailCrm\DeliveryModuleBundle\Model\DeliveryAddress;
+use RetailCrm\DeliveryModuleBundle\Model\StatusInfo;
 use JMS\Serializer\Annotation as Serializer;
 
 class ResponseLoadDeliveryData

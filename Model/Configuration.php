@@ -107,6 +107,17 @@ class Configuration
     public $selfShipmentAvailable = false;
 
     /**
+     * Возможность работы с заказом, содержащим несколько позиций с одинаковым торговым предложением
+     *
+     * @var bool
+     *
+     * @Serializer\Groups({"set", "get"})
+     * @Serializer\SerializedName("duplicateOrderProductSupported")
+     * @Serializer\Type("boolean")
+     */
+    public $duplicateOrderProductSupported = true;
+
+    /**
      * Разрешить отдельно передавать трек номер
      *
      * @var string

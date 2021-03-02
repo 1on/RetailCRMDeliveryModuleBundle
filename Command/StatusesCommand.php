@@ -2,8 +2,7 @@
 
 namespace RetailCrm\DeliveryModuleBundle\Command;
 
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use RetailCrm\DeliveryModuleBundle\Exception\AbstractModuleException;
+use Doctrine\Persistence\ObjectManager;
 use RetailCrm\DeliveryModuleBundle\Service\AccountManager;
 use RetailCrm\DeliveryModuleBundle\Service\ModuleManagerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -16,6 +15,8 @@ class StatusesCommand extends Command
 {
     use LockableTrait;
 
+    const QUERY_MAX_RESULTS = 100;
+
     /**
      * @var ModuleManagerInterface
      */
@@ -27,6 +28,11 @@ class StatusesCommand extends Command
     private $accountManager;
 
     /**
+     * @var ObjectManager
+     */
+    private $entityManager;
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -34,13 +40,15 @@ class StatusesCommand extends Command
         $this
             ->setName('statuses:update')
             ->setDescription('Update statuses')
-            ->addArgument('accountId', InputArgument::OPTIONAL, 'Choose account, or make it for all');
+            ->addArgument('accountId', InputArgument::OPTIONAL, 'Choose account, or make it for all')
+        ;
     }
 
-    public function __construct(ModuleManagerInterface $moduleManager, AccountManager $accountManager)
+    public function __construct(ModuleManagerInterface $moduleManager, AccountManager $accountManager, ObjectManager $entityManager)
     {
         $this->moduleManager = $moduleManager;
         $this->accountManager = $accountManager;
+        $this->entityManager = $entityManager;
 
         parent::__construct();
     }
@@ -60,40 +68,57 @@ class StatusesCommand extends Command
             ? (int) $input->getArgument('accountId')
             : null;
 
-        $paginator = [];
+        $accountQueryBuilder = $this->accountManager->getActiveQueryBuilder()
+            ->andWhere('account.id > :lastId')
+            ->setMaxResults(static::QUERY_MAX_RESULTS)
+        ;
+
         if (null !== $accountId) {
-            $paginator = [$this->accountManager - find($accountId)];
-        } else {
-            $accountQuery = $this->accountManager->getRepository()
-                ->createQueryBuilder('account')
-                ->where('account.active = true')
-                ->andWhere('account.freeze != true')
-                ->addOrderBy('account.id')
-                ->getQuery()
-               ->setFirstResult(0)
-               ->setMaxResults(100);
-            $paginator = new Paginator($accountQuery);
+            $accountQueryBuilder
+                ->andWhere('account.id = :accountId')
+                ->setParameter('accountId', $accountId)
+            ;
         }
 
+        $accountQuery = $accountQueryBuilder->getQuery();
+
+        $commandResult = 0;
         $count = 0;
-        foreach ($paginator as $account) {
-            try {
-                $count += $this->moduleManager
-                    ->setAccount($account)
-                    ->updateStatuses()
-                ;
-            } catch (AbstractModuleException $e) {
-                $output->writeln(
-                    "<error>Failed to update statuses for account {$account->getCrmUrl()}[{$account->getId()}]</error>"
-                );
-                $output->writeln("<error>Error: {$e->getMessage()}</error>");
+        $lastId = 0;
+        while (true) {
+            $accountQuery->setParameter('lastId', $lastId);
+
+            $result = $accountQuery->getResult();
+            if (empty($result)) {
+                break;
             }
+
+            foreach ($result as $account) {
+                $lastId = $account->getId();
+
+                try {
+                    $count += $this->moduleManager
+                        ->setAccount($account)
+                        ->updateStatuses()
+                    ;
+                } catch (\Exception $e) {
+                    $output->writeln(
+                        "<error>Failed to update statuses for account {$account->getCrmUrl()}[{$account->getId()}]</error>"
+                    );
+                    $output->writeln("<error>Error: {$e->getMessage()}</error>");
+
+                    $commandResult = 1;
+                }
+            }
+
+            $this->entityManager->clear();
+            gc_collect_cycles();
         }
 
         $output->writeln("<info>{$count} statuses updated.</info>");
 
         $this->release();
 
-        return 0;
+        return $commandResult;
     }
 }
