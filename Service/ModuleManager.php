@@ -244,7 +244,7 @@ abstract class ModuleManager implements ModuleManagerInterface
     {
         $deliveries = $this->deliveryManager->findBy([
             'account' => $this->account,
-            'externalId' => $request->deliveryIds,
+            'externalId' => $request->deliveryIds[0],
         ]);
 
         if (empty($deliveries)) {
