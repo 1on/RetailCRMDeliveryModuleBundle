@@ -2,6 +2,8 @@
 
 namespace RetailCrm\DeliveryModuleBundle\Model;
 
+use JMS\Serializer\Annotation as Serializer;
+
 class Unit
 {
     /**

@@ -3,7 +3,6 @@
 namespace RetailCrm\DeliveryModuleBundle\Model;
 
 use JMS\Serializer\Annotation as Serializer;
-use RetailCrm\DeliveryModuleBundle\Model\Settings\ExtraData;
 use RetailCrm\DeliveryModuleBundle\Model\Settings\PaymentType;
 use RetailCrm\DeliveryModuleBundle\Model\Settings\ShipmentPoint;
 use RetailCrm\DeliveryModuleBundle\Model\Settings\Status;
@@ -77,7 +76,7 @@ class Settings
     public $statuses;
 
     /**
-     * @var array|ExtraData[]
+     * @var array
      *
      * @Serializer\Groups({"set", "get"})
      * @Serializer\SerializedName("deliveryExtraData")
@@ -86,7 +85,7 @@ class Settings
     public $deliveryExtraData;
 
     /**
-     * @var array|ExtraData[]
+     * @var array
      *
      * @Serializer\Groups({"set", "get"})
      * @Serializer\SerializedName("shipmentExtraData")
