@@ -11,7 +11,7 @@ class RequestCalculate
     /**
      * Адрес отгрузки.
      *
-     * @var RetailCrm\DeliveryModuleBundle\Model\DeliveryAddress
+     * @var DeliveryAddress
      *
      * @Serializer\Groups({"request", "calculate"})
      * @Serializer\SerializedName("shipmentAddress")
@@ -33,7 +33,7 @@ class RequestCalculate
     /**
      * Набор упаковок.
      *
-     * @var RetailCrm\DeliveryModuleBundle\Model\Package[]
+     * @var Package[]
      *
      * @Serializer\Groups({"request", "calculate"})
      * @Serializer\SerializedName("packages")
